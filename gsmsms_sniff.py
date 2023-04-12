@@ -5,7 +5,7 @@
 import socket
 import struct
 import threading
-import Queue
+import queue
 import time
 import subprocess
 import re
@@ -87,7 +87,7 @@ def handle_message(**kargs):
                                         from_number = gsm_sms[8+to_number_len+3+2:8+to_number_len+3+2+from_number_len]
                                         from_number = covert_cellphone_num(from_number)
 
-                                        print "[!]%s From: %s\tTo:%s" % (GetCurrentTime(),from_number,to_number)
+                                        print("[!]{1} From: {2}\tTo: {3}", GetCurrentTime(), from_number, to_number)
 
                                 else:
                                     to_number_len = struct.unpack('B', gsm_sms[5:6])[0] - 1
@@ -106,7 +106,7 @@ def handle_message(**kargs):
                                         from_number = gsm_sms[7+to_number_len+3+2:7+to_number_len+3+2+from_number_len]
                                         from_number = covert_cellphone_num(from_number)
 
-                                        print "[!]%s From: %s\tTo:%s" % (GetCurrentTime(),from_number,to_number)
+                                        print("[!]{1} From: {2}\tTo: {3}", GetCurrentTime(), from_number, to_number)
 
                                 if is_sms_deliver:
                                     try:
@@ -133,13 +133,13 @@ def handle_message(**kargs):
 
                                         #SMS is using utf-16 encode
                                         if not is_mms:
-                                            print '[*]Msg:' + sms.decode('UTF-16BE')
+                                            print('[*]Msg:' + sms.decode('UTF-16BE'))
                                             #print "INSERT INTO sms_data(sms_to, sms_from, sms_message) VALUES('%s', '%s', '%s')" % (to_number.encode('utf-8'), from_number.encode('utf-8'), sms.decode('UTF-16BE').encode('utf-8'))
                                         else:
-                                            print "[!]%s MMS message." % GetCurrentTime()
+                                            print("[!]{1} MMS message.", GetCurrentTime())
 
                                     except:
-                                        print "[-]%s Can't Decode The Message" % GetCurrentTime()
+                                        print("[-]{1} Can't Decode The Message", GetCurrentTime())
 
                                 elif is_sms_submit:
                                     try:
@@ -173,24 +173,24 @@ def handle_message(**kargs):
 
                                         #SMS is using utf-16 encode
                                         if not is_mms:
-                                            print '[*]Msg:'+sms.decode('UTF-16BE')
+                                            print("[*]Msg: " + sms.decode("UTF-16BE"))
                                         else:
-                                            print "[!]%s MMS message." % GetCurrentTime()
+                                            print("[!]{1} MMS message.", GetCurrentTime())
                                     except:
-                                        print "[-]%s Can't Decode The Message" % GetCurrentTime()
+                                        print("[-]{1} Can't Decode The Message", GetCurrentTime())
                                 else:
-                                    print "[!]%s SMS Status Report. " % GetCurrentTime()
+                                    print("[!]{1} SMS Status Report. ", GetCurrentTime())
                             except:
-                                print "[-]%s Unexpected packets format." % GetCurrentTime()
+                                print("[-]{1} Unexpected packets format.", GetCurrentTime())
 
 def GetCurrentTime():
     return time.strftime('%Y/%m/%d %H:%M:%S',time.localtime(time.time()))
 
 if __name__ == '__main__':
-	print "[*]Sniffer Loading..."
-	print "[*]Press Ctrl+C to Exit."
+	print("[*]Sniffer Loading...")
+	print("[*]Press Ctrl+C to Exit.")
 	try:
-		q = Queue.Queue()
+		q = queue.Queue()
 		t = threading.Thread(target=handle_message, name="handle_message_thread", kwargs={'messages':q})
 		t.daemon = True
 		t.start()
@@ -207,6 +207,6 @@ if __name__ == '__main__':
 			child1.kill()
 			child2.kill()
 			child3.kill()
-			print "[-]Kill Process Done."
+			print("[-]Kill Process Done.")
 		except:
 			pass
